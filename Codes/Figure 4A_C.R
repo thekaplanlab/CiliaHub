@@ -21,7 +21,7 @@ library(RColorBrewer)
 # -----------------------------
 # 1. Load gene list
 # -----------------------------
-gene_list <- read_excel("C:/Users/lenovo/Desktop/new genes with gene annotations 23.7.2025 - Kopya (2).xlsx")
+gene_list <- read_excel("input your file")
 
 # Keep only the first Ensembl ID per gene
 gene_list <- gene_list %>%
@@ -150,7 +150,7 @@ ggsave("Ciliopathy_dotplot_human_swapped.png", plot = dotplot, width = 5, height
 # 6. Bipartite Network: Genes vs Phenotypes
 # -----------------------------
 # Prepare data
-phenotype_matrix <- read_xlsx("C:/Users/lenovo/Documents/phenotype_matrix_genes_by_ciliopathy_human55.xlsx")
+phenotype_matrix <- read_xlsx("input phenotype_matrix file")
 phenotype_matrix <- as.data.frame(phenotype_matrix)
 rownames(phenotype_matrix) <- phenotype_matrix$Phenotype
 phenotype_matrix$Phenotype <- NULL
@@ -190,4 +190,5 @@ p <- ggraph(g, layout = "bipartite") +
   labs(title = "Bipartite Network: Genes and Phenotypes") +
   guides(edge_color = "none")
 
-ggsave("C:/Users/lenovo/Documents/Bipartite_Network_Genes_Phenotypes.png", plot = p, width = 20, height = 10, dpi = 300)
+ggsave("Bipartite_Network_Genes_Phenotypes.png", plot = p, width = 20, height = 10, dpi = 300)
+
