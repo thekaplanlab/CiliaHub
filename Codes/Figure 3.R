@@ -105,8 +105,8 @@ extract_subnetwork <- function(graph, target_genes, output_png) {
 # ================================
 
 # Paths to gene lists (update paths)
-known_path <- "C:/Users/lenovo/Desktop/merge/known/known gens c elegans_and domain1 and kegg and pathway and go annotations1 and mice and human phenotype1 and tissue and other localization info and seprated tissue.xlsx"
-new_path   <- "C:/Users/lenovo/Desktop/new genes with gene annotations 23.7.2025 - Kopya (2).xlsx"
+known_path <- "input known genes"
+new_path   <- "input new genes"
 
 
 # Load gene lists
@@ -129,14 +129,9 @@ cat("Saved interaction list to known_new_interactions_gene_names.csv\n")
 # Plot full network
 plot_network(network$graph, "ppi_network_known_new_genes.png")
 
-# ================================
-# 4. Subnetwork Example (for NEK5 and others)
-# ================================
-subnet <- extract_subnetwork(network$graph, c("NEK5", "TMEM145", "ZC2HC1A", "ADAMTS20"),
-                             "subnetwork_selected_genes.png")
 
 # ================================
-# 5. Automatic Family-based Subnetwork Analysis
+# 4. Automatic Family-based Subnetwork Analysis
 # ================================
 
 # Define keyword patterns for families
@@ -225,4 +220,5 @@ dynein_subg <- extract_family_subnetworks(g, edges, dynein_patterns, "Dyneins", 
 ift_subg    <- extract_family_subnetworks(g, edges, ift_patterns, "IFT", output_prefix)
 bbsome_subg <- extract_family_subnetworks(g, edges, bbsome_patterns, "BBSome", output_prefix)
 module_subg <- extract_family_subnetworks(g, edges, module_patterns, "CEP_MKS_NPHP", output_prefix)
+
 
