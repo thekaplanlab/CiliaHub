@@ -1,14 +1,28 @@
+# ==========================================================
+# PubMed Scraper for Cilia/Flagella Gene Associations
+# ==========================================================
+# This script retrieves PubMed articles related to genes of interest 
+# with search terms including cilia, cilium, transition zone, basal body, 
+# ciliogenesis, flagella, and flagellum. 
+# ==========================================================
+
+# -----------------------------
+# 1. Required Packages
+# -----------------------------
 library(rvest)
 library(dplyr)
 library(writexl)
 library(readxl)
 library(rentrez)
 
-# Modified function to include "flagella" in the query
+# -----------------------------
+# 2. Function to Fetch PubMed Data
+# -----------------------------
 get_pubmed_data <- function(gene, max_results = 50) {
   query <- paste0(
     "https://pubmed.ncbi.nlm.nih.gov/?term=",
-    gene, "+AND+(cilia+OR+cilium+OR+transition+zone+OR+basal+body+OR+ciliogenesis+OR+flagella+OR+flagellum)",
+    gene, 
+    "+AND+(cilia+OR+cilium+OR+transition+zone+OR+basal+body+OR+ciliogenesis+OR+flagella+OR+flagellum)",
     "&sort=date&size=", max_results
   )
   
@@ -46,36 +60,41 @@ get_pubmed_data <- function(gene, max_results = 50) {
   })
 }
 
-# ??? Step 1: Read gene file (new path and sheet)
-file_path <- "C:\\Users\\lenovo\\Downloads\\unique_results_24482 gene.xlsx"
+# -----------------------------
+# 3. Load Gene List
+# -----------------------------
+file_path <- "data/human_protein_coding_genes.xlsx"  # <- update with your file path
 genes_table <- read_excel(file_path)
 genes <- na.omit(genes_table$Locus)
 
-# ??? Step 2: Fetch PubMed data
+# -----------------------------
+# 4. Fetch PubMed Data
+# -----------------------------
 results_list <- lapply(genes, function(g) get_pubmed_data(g, max_results = 200))
 results_df <- bind_rows(results_list)
 
-# ??? Step 3: Remove duplicates
+# -----------------------------
+# 5. Remove Duplicates
+# -----------------------------
 unique_results <- distinct(results_df, Gene, PMID, .keep_all = TRUE)
 
-# ??? Step 4: Save initial results
-write_xlsx(unique_results, "C:\\Users\\lenovo\\Documents\\pubmed_flagella_results1.xlsx")
+# Save initial results
+write_xlsx(unique_results, "results/pubmed_cilia_flagella_results_raw.xlsx")
 
-# ??? Step 5: Clean - remove empty and "no results"
+# -----------------------------
+# 6. Clean Results
+# -----------------------------
 cleaned_results <- unique_results %>%
-  filter(!is.na(PMID), tolower(trimws(Title)) != "no results", trimws(PMID) != "")
+  filter(
+    !is.na(PMID),
+    tolower(trimws(Title)) != "no results",
+    trimws(PMID) != ""
+  )
 
-# ??? Step 6: Save cleaned results
-write_xlsx(cleaned_results, "C:\\Users\\lenovo\\Documents\\pubmed_flagella_cleaned1.xlsx")
-write.csv(cleaned_results, "C:\\Users\\lenovo\\Documents\\pubmed_flagella_cleaned.csv", row.names = FALSE)
+# Save cleaned results
+write_xlsx(cleaned_results, "results/pubmed_cili_flagella_cleaned.xlsx")
+write.csv(cleaned_results, "results/pubmed_cilia_flagella_cleaned.csv", row.names = FALSE)
 
-
-
-
-
-
-
-
-
-
-
+# ==========================================================
+# End of Script
+# ==========================================================
